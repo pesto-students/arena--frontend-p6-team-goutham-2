@@ -15,6 +15,10 @@ export default function Home() {
     e.preventDefault();
     router.push(ROUTES.courtList);
   };
+  const handleLogin = (e) => {
+    e.preventDefault();
+    router.push(ROUTES.login);
+  };
   return (
     <>
       <Head>
@@ -28,9 +32,13 @@ export default function Home() {
         <button type='button' onClick={handleClick}>
           Register
         </button><br/>
+        <button type='button' onClick={handleLogin}>
+          Login
+        </button><br/>
         <button type='button' onClick={handleCourtList}>
           Court
         </button>
+
       </main>
     </>
   );

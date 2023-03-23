@@ -2,37 +2,22 @@ import React, { useState } from "react";
 import { Navbar } from '@components';
 import Image from 'next/image';
 import axios from "./api/authApi";
+import { useRouter } from "next/router";
+import {validate} from "../components/validation/validate"
 const Register = () => {
-  const intialValues = { email: "", password: "", fullName: "", phone: "" };
+  const intialValues = { email: "", password: "", name: "", phone: "" };
+  const router = useRouter();
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
+  const [successMsg,setSuccessMsg]=useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const REGISTER_URL = "/signup";
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
-  const validate = (values) => {
-    let errors = {};
-    // const regexName = /ab+c/;
-    // if(!values.fullName){
-    //   errors.fullName = "Cannot be blank";
-    // }else if (!regexName.test(values.fullName)){
-    //   errors.fullName = "Name must be a string";
-    // }
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if (!values.email) {
-      errors.email = "Cannot be blank";
-    } else if (!regex.test(values.email)) {
-      errors.email = "Invalid email format";
-    }
-    if (!values.password) {
-      errors.password = "Cannot be blank";
-    } else if (values.password.length < 4) {
-      errors.password = "Password must be more than 4 characters";
-    }
-    return errors;
-  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
@@ -43,11 +28,13 @@ const Register = () => {
         REGISTER_URL,
         JSON.stringify(formValues),
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json", 
+          },
           withCredentials: true,
         }
       );
-      console.log(response,"response...");
+      response.data.id && setSuccessMsg("Registered")
     } catch (err) {
       console.log(err, "errr");
     }
@@ -65,9 +52,9 @@ const Register = () => {
           <div className=''>
             <input
               type='text'
-              name='fullName'
+              name='name'
               placeholder='Full name'
-              id='fullName'
+              id='name'
               onChange={handleChange}
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
             />

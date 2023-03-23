@@ -2,14 +2,46 @@
 import { Navbar } from '@components';
 import Image from 'next/image';
 import React, { useState } from "react";
+import axios from "./api/authApi";
+import {validate} from "../components/validation/validate"
+import { useRouter } from 'next/router';
 const SignIn = () => {
-  const intialValues = { userName: "", password: "" };
+  const router = useRouter();
+  const intialValues = { email: "", password: "" };
   const [formValues, setFormValues] = useState(intialValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMsg,setSuccessMsg]=useState(null)
+  const REGISTER_URL ="/signin"
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
-  console.log(formValues, "formValues...");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormErrors(validate(formValues));
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post(
+        REGISTER_URL,
+        JSON.stringify(formValues),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      response.data.token && setSuccessMsg("Registered")
+    } catch (err) {
+      console.log(err, "error");
+    }
+  };
+  React.useEffect (()=>{
+    if(successMsg === "Registered"){
+      console.log("successMsg");
+      router.push("/")}
+      },[successMsg]);
   return (
     <div className='w-full'>
       <Navbar />
@@ -18,14 +50,14 @@ const SignIn = () => {
         <h1 className='text-xl text-[#434342] italic'>Hello !</h1>
         <p className='italic'>Sign in to your Account</p>
 
-        <form className='flex flex-col items-center space-y-4 mt-8'>
+        <form onSubmit={handleSubmit} className='flex flex-col items-center space-y-4 mt-8'>
           <div className=''>
             <input
               type='text'
-              name='userName'
+              name='email'
               placeholder='Username'
               onChange={handleChange}
-              id='fullName'
+              id='userName'
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
             />
           </div>
@@ -40,7 +72,7 @@ const SignIn = () => {
             />
           </div>
           <p className='ml-10'>Forgot Your Password ?</p>
-          <button className='text-xl italic text-[#434342]'>SignIn</button>
+          <button className='text-xl italic text-[#434342]' type='submit'>SignIn</button>
         </form>
       </main>
 

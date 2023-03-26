@@ -6,7 +6,16 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      columns: {
+        '7xl': '80rem',
+        '3xs': '25rem',
+      },
+
+      minHeight: {
+        '500': '500px',
+      }
+    },
   },
   plugins: [],
 };

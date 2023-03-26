@@ -1,7 +1,18 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Navbar } from '@components';
-
+import { useEffect, useState } from 'react';
+import axios from "../api/authApi";
+const URL = "/court/courts";
 const CourtList = () => {
+    const [courts,setCourts]=useState(null)
+useEffect(()=>{
+    (async()=>{
+        const response = await axios.get(URL );
+                    setCourts(response.data);
+    })();
+
+},[])
+console.log(courts,"........");
     const people = [
 
         {

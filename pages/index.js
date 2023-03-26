@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { useRouter } from "next/router";
 import { ROUTES } from "@constants";
 import { Navbar } from "@components";
+import MainLayout from "@components/layout/mainlayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +31,7 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div className="w-full">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main>
           <div className="flex items-center justify-between 	...">
@@ -109,4 +110,24 @@ export default function Home() {
       </main> */}
     </>
   );
+}
+
+Home.getLayout = MainLayout
+
+export async function getServerSideProps(context) {
+  /**
+   * check for session details here
+   */
+
+  if (!session) {
+		return {
+			redirect: {
+				destination: '/login',
+			},
+		}
+	}
+  
+	return {
+		props: {},
+	}
 }

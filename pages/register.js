@@ -39,7 +39,11 @@ const Register = () => {
       console.log(err, "errr");
     }
   };
-
+  React.useEffect (()=>{
+    if(successMsg === "Registered"){
+      console.log("successMsg");
+      router.push("/")}
+      },[successMsg]);
   return (
     <div className='w-full'>
 

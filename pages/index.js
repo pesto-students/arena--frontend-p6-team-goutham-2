@@ -6,7 +6,7 @@ import { Navbar } from "@components";
 import MainLayout from "@components/layout/mainlayout";
 
 const inter = Inter({ subsets: ["latin"] });
-
+const session = true;
 export default function Home() {
   const router = useRouter();
   const handleClick = (e) => {

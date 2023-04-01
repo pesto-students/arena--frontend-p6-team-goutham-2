@@ -40,7 +40,7 @@ const SignIn = () => {
   React.useEffect (()=>{
     if(successMsg === "Registered"){
       console.log("successMsg");
-      router.push("/")}
+      router.push("/court/courtlist")}
       },[successMsg]);
   return (
     <div className='w-full'>

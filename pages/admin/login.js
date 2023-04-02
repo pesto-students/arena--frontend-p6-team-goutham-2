@@ -2,7 +2,7 @@
 import { Navbar } from '@components';
 import React, { useState } from "react";
 import axios from "../api/authApi";
-import {validate} from "../../components/validation/validate"
+import { validate } from "../../components/validation/validate"
 import { useRouter } from 'next/router';
 const SignIn = () => {
   const router = useRouter();
@@ -10,8 +10,8 @@ const SignIn = () => {
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMsg,setSuccessMsg]=useState(null)
-  const REGISTER_URL ="/admin/signin"
+  const [successMsg, setSuccessMsg] = useState(null)
+  const REGISTER_URL = "/admin/signin"
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -36,11 +36,11 @@ const SignIn = () => {
       console.log(err, "error");
     }
   };
-  React.useEffect (()=>{
-    if(successMsg === "Login"){
-      console.log("successMsg");
-      router.push("/")}
-      },[successMsg]);
+  React.useEffect(() => {
+    if (successMsg === "Login") {
+      router.push("/")
+    }
+  }, [successMsg]);
   return (
     <div className='w-full'>
       <Navbar />
@@ -74,7 +74,6 @@ const SignIn = () => {
           <button className='text-xl italic text-[#434342]' type='submit'>SignIn</button>
         </form>
       </main>
-
     </div>
   );
 };

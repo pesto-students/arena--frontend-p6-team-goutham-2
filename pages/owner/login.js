@@ -2,16 +2,17 @@
 import { Navbar } from '@components';
 import React, { useState } from "react";
 import axios from "../api/authApi";
-import {validate} from "../../components/validation/validate"
+import { validate } from "../../components/validation/validate"
 import { useRouter } from 'next/router';
 const SignIn = () => {
   const router = useRouter();
   const intialValues = { email: "", password: "" };
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
+  const [loginError, setLoginError] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMsg,setSuccessMsg]=useState(null)
-  const REGISTER_URL ="/owner/signin"
+  const [successMsg, setSuccessMsg] = useState(null)
+  const REGISTER_URL = "/owner/signin"
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -31,16 +32,17 @@ const SignIn = () => {
           withCredentials: true,
         }
       );
-      response.data.token && setSuccessMsg("Registered")
+      response.data.token && setSuccessMsg(response.data.user._id)
     } catch (err) {
       console.log(err, "error");
+      // setLoginError(err.response.data.error)
     }
   };
-  React.useEffect (()=>{
-    if(successMsg === "Registered"){
-      console.log("successMsg");
-      router.push("/")}
-      },[successMsg]);
+  React.useEffect(() => {
+    if (successMsg) {
+      router.push(`/owner/Home/${successMsg}`)
+    }
+  }, [successMsg]);
   return (
     <div className='w-full'>
       <Navbar />
@@ -70,12 +72,14 @@ const SignIn = () => {
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
             />
           </div>
-          <p className='ml-10'>Forgot Your Password ?</p>
+          {loginError === "Email & Password do not match" &&
+            (<div class="text-red-700 px-4 py-3 ">
+              <strong class="font-bold">{loginError}</strong></div>
+            )}
           <button className='text-xl italic text-[#434342]' type='submit'>SignIn</button>
         </form>
       </main>
-
-    </div>
+  </div>
   );
 };
 

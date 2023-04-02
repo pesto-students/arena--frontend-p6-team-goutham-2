@@ -2,30 +2,41 @@ import Head from 'next/head';
 import { Inter } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@constants';
-import axios from "../api/authApi"
+import axios from "../../api/authApi"
 import { Navbar } from '@components';
 import { useEffect, useState } from 'react';
-import { validateCourt } from '../../components/validation/validate';
 export default function AddCourt() {
-    const intialValues = { courtName: "", location: "", address: "", sports: "Badminton", facility:"",price:"" };
-    const router = useRouter();
+    const router = useRouter()
+    const { owner_id } = router.query
+    const intialValues = { courtName: "", location: "", address: "", sports: "Badminton", facility: "", price: "", owner_id: owner_id };
     const [formValues, setFormValues] = useState(intialValues);
-    // const [slot, setSlot] = useState(false)
+    const [data, setData] = useState(null)
     const [formErrors, setFormErrors] = useState({});
     const [successMsg, setSuccessMsg] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const ADDCOURT_URL = "/court/addcourt";
+    const ADDCOURT_URL = `/court/addcourt/${owner_id}`;
     const [fromTime, setFromTime] = useState([1]);
     const [toTime, setToTime] = useState([1]);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues({ ...formValues, [name]: value });
     };
-    useEffect(()=>{
-        if(successMsg === "court added"){
-            router.push("/")
+    useEffect(() => {
+        if (successMsg != null) {
+            router.push(`/owner/Home/${owner_id}`)
         }
     })
+    useEffect(() => {
+        // fetch data
+        const dataFetch = async () => {
+            const data =
+                await axios.get(
+                    `/court/${owner_id}`
+                );
+            data.data && setData(data?.data.data[0])
+        };
+        dataFetch();
+    }, [owner_id]);
     // useEffect(() => {
     //     const arr = [];
     //     for (let i = 1; i <= 12; i++) {
@@ -42,7 +53,7 @@ export default function AddCourt() {
     // }, [formValues.from])
     const handleSubmit = async (e) => {
         e.preventDefault();
-          try {
+        try {
             const response = await axios.post(
                 ADDCOURT_URL,
                 JSON.stringify(formValues),
@@ -53,13 +64,27 @@ export default function AddCourt() {
                     withCredentials: true,
                 }
             );
-            console.log(response,"res...from api");
-            response.data.id && setSuccessMsg("court added")
+            response.data.id && setSuccessMsg(response.data.id)
         } catch (err) {
-            console.log(err, "errr");
+            console.log(err, "error");
         }
     }
-    console.log(formErrors,"formErrors......");
+    //get existing data
+    // useEffect(() => {
+    //     // fetch data
+    //     const dataFetch = async () => {
+    //       const data = await (
+    //       await  axios.get(
+    //           "https://run.mocky.io/v3/b3bcb9d2-d8e9-43c5-bfb7-0062c85be6f9"
+    //         )
+    //       ).json();
+
+    //       // set state when the data received
+    //       setData(data);
+    //     };
+
+    //     dataFetch();
+    //   }, []);
     return (
         <>
             <div className='w-full'>
@@ -76,38 +101,44 @@ export default function AddCourt() {
                             <div className="sm:col-span-2">
                                 <label className="block text-sm font-semibold leading-6 text-gray-900">Badminton court</label>
                                 <div className="mt-2.5">
-                                    <input type="text" name="courtName" id="courtName" onChange={handleChange} className="block w-full rounded-md border-0 py-2 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
+                                    <input type="text" name="courtName" id="courtName" onChange={handleChange} value={data?.courtName} className="block w-full rounded-md border-0 py-2 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
                                 </div>
                             </div>
-                            <div>
+                            {data?.location ? (<><div className="sm:col-span-2">
+                                <label className="block text-sm font-semibold leading-6 text-gray-900">Location</label>
+                                <div className="mt-2.5">
+                                    <input type="text" name="location" id="location" onChange={handleChange} value={data?.location} className="block w-full rounded-md border-0 py-2 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
+                                </div>
+                            </div></>) : (<>                        <div>
                                 <label className="block text-sm font-semibold leading-6 text-gray-900">Location</label>
                                 <select name="location" onChange={handleChange} required>
                                     <option value="" selected disabled >Select Location</option>
 
                                     <option value="chennai" >Chennai</option>
                                     <option value="bangalore">Bangalore</option>
-                                </select></div>
+                                </select></div></>)}
+
                             <div className="sm:col-span-2">
                                 <label className="block text-sm font-semibold leading-6 text-gray-900">Address</label>
                                 <div className="mt-2.5">
-                                    <textarea name="address" id="address" onChange={handleChange} className="block w-full rounded-md border-0 py-2 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required></textarea>
+                                    <textarea name="address" value={data?.address} id="address" onChange={handleChange} className="block w-full rounded-md border-0 py-2 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required></textarea>
                                 </div>
                             </div>
                             <div className="sm:col-span-2">
                                 <label className="block text-sm font-semibold leading-6 text-gray-900">Sports</label>
                                 <div className="mt-2.5">
-                                    <input type="text" name="sports" value="Badminton" id="sports" className="block w-full rounded-md border-0 py-2 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required/>
+                                    <input type="text" name="sports" value="Badminton" id="sports" className="block w-full rounded-md border-0 py-2 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
                                 </div>
                             </div>
                             <div className="sm:col-span-2">
-                                <label className="block text-sm font-semibold leading-6 text-gray-900">Price</label>
+                                <label className="block text-sm font-semibold leading-6 text-gray-900" >Price</label>
                                 <div className=" mt-2.5">
-                                    <input type="number" onChange={handleChange} name="price" id="price" className="block w-full rounded-md border-0 py-2 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
+                                    <input type="number" onChange={handleChange} name="price" placeholder={data?.price} id="price" className="block w-full rounded-md border-0 py-2 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required />
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold leading-6 text-gray-900">Facility</label>
-                                <select name="facility" onChange={handleChange} required>
+                                <select name="facility" onChange={handleChange} >
                                     <option value="" selected disabled >Select facility</option>
 
                                     <option value="AC" >AC</option>

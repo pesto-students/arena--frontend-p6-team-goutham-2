@@ -3,20 +3,20 @@ import { Navbar } from '@components';
 import Image from 'next/image';
 import axios from "../api/authApi";
 import { useRouter } from "next/router";
-import {validate} from "../../components/validation/validate"
+import { validate } from "../../components/validation/validate"
 const Register = () => {
   const intialValues = { email: "", password: "", name: "", phone: "" };
   const router = useRouter();
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [successMsg,setSuccessMsg]=useState(null)
+  const [successMsg, setSuccessMsg] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const REGISTER_URL = "/admin/signup";
-  React.useEffect (()=>{
-    if(successMsg === "Registered"){
-      console.log("successMsg");
-      router.push("/")}
-      },[successMsg]);
+  React.useEffect(() => {
+    if (successMsg === "Registered") {
+      router.push("/")
+    }
+  }, [successMsg]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -33,14 +33,14 @@ const Register = () => {
         JSON.stringify(formValues),
         {
           headers: {
-            "Content-Type": "application/json", 
+            "Content-Type": "application/json",
           },
           withCredentials: true,
         }
       );
       response.data.id && setSuccessMsg("Registered")
     } catch (err) {
-      console.log(err, "errr");
+      console.log(err, "error");
     }
   };
 

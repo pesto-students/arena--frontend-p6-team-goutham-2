@@ -1,17 +1,32 @@
 import { useRouter } from 'next/router'
 import { Navbar } from '@components';
+import { useEffect } from 'react';
 
 const Post = () => {
     const router = useRouter()
     const { pid } = router.query
     const apiKey = 'e7537d6804384d3f9149817d235e1084';
     const apiURL = 'https://emailvalidation.abstractapi.com/v1/?api_key=' + apiKey
+
+
+    useEffect(() => {
+        (async () => {
+            const email = "arenahelpline@gmail.com"
+            try {
+                const response = await fetch(apiURL + '&email=' + email);
+                const data = await response.json();
+            } catch (error) {
+                throw error;
+            }
+        })();
+
+    }, [])
+
+
     const sendEmailValidationRequest = async (email) => {
         try {
             const response = await fetch(apiURL + '&email=' + email);
-            console.log(response,"res............");
             const data = await response.json();
-            console.log(data,"data........");
         } catch (error) {
             throw error;
         }
@@ -40,12 +55,10 @@ const Post = () => {
                                 <p className="text-sm italic font-bold">₹450/hour</p>
                                 <p className="text-sm italic font-bold flex items-center justify-end  ...">arena@gmail.com</p>
                             </div>
-                            <button type="submit" onChange={sendEmailValidationRequest("arena@gmail.com")} className='block w-full rounded-md bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600'>book now</button>
+                            <button type="submit" onChange={() => sendEmailValidationRequest("arena@gmail.com")} className='block w-full rounded-md bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600'>book now</button>
                         </div>
                     </li>
-
                 </ul>
-
             </div>
         </div>
     );

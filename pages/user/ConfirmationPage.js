@@ -19,13 +19,18 @@ export default function Confirmation() {
                     <meta name='viewport' content='width=device-width, initial-scale=1' />
                     <link rel='icon' href='/favicon.ico' />
                 </Head>
-                <main>
-                    <h1>
-                        confirmation page
+                <main className='flex flex-col items-center mt-16 gap-10'>
+                    <div className=' flex flex-col items-center bg-white outline-gray shadow-sm px-4 py-2 font-light text-[#434342] italic w-3/5 rounded-3xl text-center'>
+
+                    <h1 className='text-base'>
+                        Hi you booking is confirmed and thanks for choosing us. Kindly check your email for slot booking details.
+                    </h1> <br/>
+                    <h1 className='text-base'>
+                        Thank you
                     </h1>
-                   <center> <div className="mt-10 content-center justify-center">
-                        <button type="submit" className="block w-full rounded-md bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Check booking status</button>
-                    </div></center>
+                    </div>
+                    
+                        <button type="submit" className=" w-max	rounded-3xl block w-full bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Check booking status</button>
                 </main>
             </div>
         </>

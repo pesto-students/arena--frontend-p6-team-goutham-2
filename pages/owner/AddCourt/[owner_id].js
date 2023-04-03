@@ -8,24 +8,30 @@ import { useEffect, useState } from 'react';
 export default function AddCourt() {
     const router = useRouter()
     const { owner_id } = router.query
+    const updateValues = {price:""};
     const intialValues = { courtName: "", location: "", address: "", sports: "Badminton", facility: "", price: "", owner_id: owner_id };
     const [formValues, setFormValues] = useState(intialValues);
+    const [updatedValues, setUpdatedValues] = useState(updateValues);
     const [data, setData] = useState(null)
     const [formErrors, setFormErrors] = useState({});
     const [successMsg, setSuccessMsg] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false);
     const ADDCOURT_URL = `/court/addcourt/${owner_id}`;
+    const UPDATECOURT_URL = `/court/updatecourt/${owner_id}`;
     const [fromTime, setFromTime] = useState([1]);
     const [toTime, setToTime] = useState([1]);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues({ ...formValues, [name]: value });
+        setUpdatedValues({ ...updateValues, [name]: value });
+
     };
+    console.log(updatedValues,"updatedValues.......");
     useEffect(() => {
         if (successMsg != null) {
             router.push(`/owner/Home/${owner_id}`)
         }
-    })
+    },[successMsg])
     useEffect(() => {
         // fetch data
         const dataFetch = async () => {
@@ -53,6 +59,7 @@ export default function AddCourt() {
     // }, [formValues.from])
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(!updatedValues.price){
         try {
             const response = await axios.post(
                 ADDCOURT_URL,
@@ -68,6 +75,23 @@ export default function AddCourt() {
         } catch (err) {
             console.log(err, "error");
         }
+    }else{
+        try {
+            const response = await axios.put(
+                UPDATECOURT_URL,
+                JSON.stringify(updatedValues),
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: true,
+                }
+            );
+            response.data.id && setSuccessMsg(response.data.id)
+        } catch (err) {
+            console.log(err, "error");
+        }
+    }
     }
     //get existing data
     // useEffect(() => {
@@ -175,8 +199,11 @@ export default function AddCourt() {
                                     </select>
                                 </div>
                             </>)} */}
+                            <br/>
+                            <div>
                             <div className="mt-10 content-center justify-center">
                                 <button type="submit" className="block w-full rounded-md bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Submit</button>
+                            </div>
                             </div>
                         </div>
                     </form>

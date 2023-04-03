@@ -9,14 +9,14 @@ import { validateCourt } from '../../../components/validation/validate';
 export default function AddSlot() {
     const router = useRouter()
     const { owner_id } = router.query;
-    const intialValues = { courtName: "", location: "", address: "", sports: "Badminton", facility: "", price: "", owner_id: owner_id, from: "", to: "" };
+    const intialValues = { from: "", to: "" };
     const [formValues, setFormValues] = useState(intialValues);
     const [slot, setSlot] = useState(false)
     const [formErrors, setFormErrors] = useState({});
     const [successMsg, setSuccessMsg] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [data, setData] = useState(null)
-    const ADDCOURT_URL = "/court/addcourt";
+    const ADDCOURT_URL = `/court/updatecourt/${owner_id}`;
     const [fromTime, setFromTime] = useState([1]);
     const [toTime, setToTime] = useState([1]);
     const handleChange = (e) => {
@@ -37,6 +37,11 @@ export default function AddSlot() {
         dataFetch();
     }, [owner_id]);
     useEffect(() => {
+        if (successMsg === "court updated") {
+            router.push(`/owner/Home/${owner_id}`)
+        }
+    },[successMsg])
+    useEffect(() => {
         const arr = [];
         for (let i = 1; i <= 12; i++) {
             arr.push(i);
@@ -53,9 +58,9 @@ export default function AddSlot() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(
+            const response = await axios.put(
                 ADDCOURT_URL,
-                JSON.stringify(data),
+                JSON.stringify(formValues),
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -63,7 +68,8 @@ export default function AddSlot() {
                     withCredentials: true,
                 }
             );
-            response.data.id && setSuccessMsg("court added")
+            console.log(formValues,response,"res...........");
+            response.data.id && setSuccessMsg("court updated")
         } catch (err) {
             console.log(err, "error");
         }
@@ -92,33 +98,47 @@ export default function AddSlot() {
                             <div className="mt-10">
                                 <div onClick={() => setSlot(true)} className="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" >Select slot</div>
                             </div>
-                            {slot && (<>
-                                <div>
-                                    <label className="block text-sm font-semibold leading-6 text-gray-900">TIME</label>
+                            {slot && (
+                <>
+                  <div className="py-3">
+                    <label className="block text-sm font-semibold leading-6 text-gray-900">
+                      TIME
+                    </label>
+                    <div className="flex justify-around">
+                      <div className="flex items-center">
+                        <label className="block text-sm font-semibold leading-6 text-gray-900">
+                          From
+                        </label>
+                        <select name="from" onChange={handleChange} required>
+                          {fromTime?.map((i) => {
+                            return <option value={i}>{i}</option>;
+                          })}
+                        </select>
+                      </div>
 
-                                    <label className="block text-sm font-semibold leading-6 text-gray-900">From</label>
-                                    <select name="from" onChange={handleChange} required>
-                                        {fromTime?.map((i) => {
-                                            return (
-                                                <option value={i}>{i}</option>
-                                            )
-                                        })}
-
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold leading-6 text-gray-900">To</label>
-                                    <select name="to" onChange={handleChange} required>
-                                        {toTime?.map((i) => {
-                                            return (
-                                                <option value={i}>{i}</option>
-                                            )
-                                        })}
-                                    </select>
-                                </div>
-                            </>)}
+                      <div className="flex items-center">
+                        <label className="block text-sm font-semibold leading-6 text-gray-900">
+                          To
+                        </label>
+                        <select name="to" onChange={handleChange} required>
+                          {toTime?.map((i) => {
+                            return <option value={i}>{i}</option>;
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
                             <br />
-                            <button type='submit'>SUBMIT</button>
+                            <div className="flex justify-center">
+                <button
+                //   onClick={() => router.push(`/owner/Slot/${owner_id}`)}
+                  class="italic rounded-full py-2.5 px-4 bg-green-500 text-white font-semibold shadow-md hover:bg-white-700 focus:outline-gray focus:ring-2 focus:ring-white-400 focus:ring-opacity-75"
+                >
+                  Submit
+                </button>
+              </div>
                         </div>
                     </form>
                 </main>

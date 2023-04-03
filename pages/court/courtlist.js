@@ -2,7 +2,7 @@
 import { Navbar } from '@components';
 import { useEffect, useState } from 'react';
 import axios from "../api/authApi";
-const URL = "/court/courts";
+const URL = "/court/list";
 const CourtList = () => {
     const [courts, setCourts] = useState(null)
     useEffect(() => {
@@ -10,8 +10,7 @@ const CourtList = () => {
             const response = await axios.get(URL);
             setCourts(response.data);
         })();
-
-    }, [])
+    }, []);
     return (
         <div className='w-full'>
             <Navbar />

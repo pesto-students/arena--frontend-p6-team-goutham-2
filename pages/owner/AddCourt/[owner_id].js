@@ -26,7 +26,6 @@ export default function AddCourt() {
         setUpdatedValues({ ...updateValues, [name]: value });
 
     };
-    console.log(updatedValues,"updatedValues.......");
     useEffect(() => {
         if (successMsg != null) {
             router.push(`/owner/Home/${owner_id}`)

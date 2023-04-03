@@ -18,7 +18,6 @@ export default function Home() {
         };
         dataFetch();
     }, [owner_id]);
-    console.log(data, "true........");
     return (
         <>
             <div className="w-full">

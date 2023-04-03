@@ -9,7 +9,7 @@ const Register = () => {
   const router = useRouter();
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [successMsg, setSuccessMsg] = useState(null)
+  const [userId, setUserId] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const REGISTER_URL = "/signup";
 
@@ -34,16 +34,16 @@ const Register = () => {
           withCredentials: true,
         }
       );
-      response.data.id && setSuccessMsg("Registered")
+      response.data.id && setUserId(response.data.id)
     } catch (err) {
       console.log(err, "error");
     }
   };
   React.useEffect(() => {
-    if (successMsg === "Registered") {
-      router.push("/")
+    if (userId != null) {
+      router.push(`/court/courtlist/${userId}`)
     }
-  }, [successMsg]);
+  }, [userId]);
   return (
     <div className='w-full'>
 

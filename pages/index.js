@@ -9,18 +9,6 @@ const inter = Inter({ subsets: ["latin"] });
 const session = true;
 export default function Home() {
   const router = useRouter();
-  const handleClick = (e) => {
-    e.preventDefault();
-    router.push(ROUTES.register);
-  };
-  const handleCourtList = (e) => {
-    e.preventDefault();
-    router.push(ROUTES.courtList);
-  };
-  const handleLogin = (e) => {
-    e.preventDefault();
-    router.push(ROUTES.login);
-  };
 
   return (
     <>
@@ -42,11 +30,12 @@ export default function Home() {
                 </h1>
               </div>
 
-              <div className="flex flex-row items-center justify-between w-1/2 ... ">
-                <button className="py-2  text-xl text-black text-[#434342] ">
+              <div className="flex flex-row items-center justify-between w-1/2 ... " onClick={()=>router.push("/register")}>
+                <button className="py-2  text-xl text-black text-[#434342] " >
                   Get Started
                 </button>
                 <svg
+                
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -96,18 +85,6 @@ export default function Home() {
           </div>
         </main>
       </div>
-      {/* <main>
-        <h1 className='text-blue-600 text-xl'>Welcome to Arena</h1>
-        <button type='button' onClick={handleClick}>
-          Register
-        </button><br/>
-        <button type='button' onClick={handleLogin}>
-          Login
-        </button><br/>
-        <button type='button' onClick={handleCourtList}>
-          Court
-        </button>
-      </main> */}
     </>
   );
 }

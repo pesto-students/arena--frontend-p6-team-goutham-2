@@ -6,12 +6,13 @@ import { useState } from 'react';
 import Calendar from '../../components/calendar';
 
 const Post = () => {
-    const router = useRouter()
-    const { owner_id } = router.query
-    const [data,setData] = useState(null)
-    const apiKey = 'e7537d6804384d3f9149817d235e1084';
-    const apiURL = 'https://emailvalidation.abstractapi.com/v1/?api_key=' + apiKey
-
+  const router = useRouter()
+  const { owner_id } = router.query
+  const [data,setData] = useState(null)
+  const apiKey = 'e7537d6804384d3f9149817d235e1084';
+  const apiURL = 'https://emailvalidation.abstractapi.com/v1/?api_key=' + apiKey
+  const BOOKNOW_URL = `/court/booknow/${data?._id}`;
+    
 
     // useEffect(() => {
     //     (async () => {
@@ -35,7 +36,28 @@ const Post = () => {
     //         throw error;
     //     }
     // }
-
+    const handleSubmit = async () => {
+      try {
+        delete data._id
+        const response = await axios.post(
+            BOOKNOW_URL,
+            JSON.stringify(data),
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+        console.log(response,"res.....");
+        // response.data.id && setSuccessMsg(response.data.id)
+    } catch (err) {
+        console.log(err, "error");
+    }
+    }
+const handleCalendar = () => {
+  console.log("calendar");
+}
     useEffect(() => {
         // fetch data
         const dataFetch = async () => {
@@ -44,9 +66,8 @@ const Post = () => {
                     `/court/${owner_id}`
 
                 );
-                console.log(data,"data.....");
             data?.data && setData(data?.data.data[0])
-        };
+      };
 
         dataFetch();
     }, [owner_id]);
@@ -86,7 +107,7 @@ const Post = () => {
                 </div>
               </div>
             </li>
-  <Calendar from={data?.from || 9} to={data?.to ||19} />           
+  <Calendar from={data?.from || 9} to={data?.to ||19} handleCalendar={handleCalendar}/>           
   
             <li>
               <div className="flex flex-col gap-10">
@@ -101,7 +122,7 @@ const Post = () => {
             </li>
             <li className="flex items-center justify-center">
               <button
-                onClick={() => router.push(`/user/BookNow/${owner_id}`)}
+                onClick={handleSubmit}
                 class="italic rounded-lg py-2.5 px-6 bg-green-500 text-white font-semibold shadow-md hover:bg-white-700 focus:outline-gray focus:ring-2 focus:ring-white-400 focus:ring-opacity-75"
               >
                 Book Now

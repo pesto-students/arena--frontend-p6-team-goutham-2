@@ -21,6 +21,6 @@
       "@constants/*": ["constants/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/register.js", "pages/login.js", "pages/index.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/register.js", "pages/login.js", "pages/index.js", "pages/_app.js"],
   "exclude": ["node_modules"]
 }

@@ -11,21 +11,26 @@ const BookCourt = () => {
   const [data, setData] = useState(null);
   const [dateTime, setDateTime] = useState(null);
   const [userData, setUserData] = useState(null);
+  const[paymentDetails,setPaymentDetails]=useState(null)
   const apiKey = "e7537d6804384d3f9149817d235e1084";
   const apiURL =
     "https://emailvalidation.abstractapi.com/v1/?api_key=" + apiKey;
-  const BOOKNOW_URL = `/court/booknow/${data?._id}`;
   const USER_URL = `${router.query.user_id}`;
   const URL = "/rayzorpay";
   useEffect(() => {
     const getUsers = async () => {
       if (router.query.user_id) {
         const response = await axios.get(USER_URL);
-        setUserData(response);
+        setUserData(response.data.data);
       }
     };
     getUsers();
   }, [router.query.user_id]);
+  useEffect(()=>{
+    if(paymentDetails != null){
+      router.push("/user/ConfirmationPage")
+    }
+  },[paymentDetails]);
   // useEffect(() => {
   //     (async () => {
   //         const email = "arenahelpline@gmail.com"
@@ -47,7 +52,6 @@ const BookCourt = () => {
   //         throw error;
   //     }
   // }
-
   const handleCalendar = (date) => {
     setDateTime(date?.dateTime?.toLocaleString());
   };
@@ -80,13 +84,29 @@ const BookCourt = () => {
           description: "Test Transaction",
           image: "https://example.com/your_logo",
           order_id: response.data.data.id, 
-          handler: function (response) {
-            alert(response.razorpay_payment_id);
-            alert(response.razorpay_order_id);
-            alert(response.razorpay_signature);
+          handler: async function  (response) {
+            const userPayment= {
+              name: userData.name,
+              email:userData.email,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id:response.razorpay_order_id,
+              razorpay_signature:response.razorpay_signature,
+              courtName: data.courtName,
+              amount:data.price,              
+              location:data.location,
+              date:data.date,
+            }
+            const responses = await axios.post(`/payment/paymentdata`, JSON.stringify(userPayment), {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              withCredentials: true,
+            });
+            console.log(responses.data);
+            responses.data.id && setPaymentDetails(responses.data.signature);
           },
           notes: {
-            notes_key_1: "Tea, Earl Grey, Hot",
+            notes_key_1: "Rayzor pay payment",
             notes_key_2: "Tea, Earl Grey… decaf.",
           },
           prefill: {

@@ -1,15 +1,13 @@
 import Head from 'next/head';
 import { Inter } from 'next/font/google';
 import { useRouter } from 'next/router';
-import { ROUTES } from '@constants';
 import { Navbar } from '@components';
-import { useState } from 'react';
 
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Confirmation() {
-
+const router= useRouter()
     return (
         <>
             <div className='w-full'>
@@ -31,7 +29,7 @@ export default function Confirmation() {
                         </h1>
                     </div>
 
-                    <button type="button" className=" w-max	rounded-3xl block w-full bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Check booking status</button>
+                    <button type="button"    onClick={() => router.push(`/`)}className=" w-max	rounded-3xl block w-full bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Go back</button>
                 </main>
             </div>
         </>

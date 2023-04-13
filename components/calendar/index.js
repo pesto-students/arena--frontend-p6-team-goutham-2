@@ -3,7 +3,7 @@ import ReactCalendar from "react-calendar"
 import { add, format } from "date-fns";
 import { CLOSING_TIME, TOTALHOURSINMINUTES, OPENING_TIME } from '../../constants/config';
 
-export default function Calendar({from,to}) {
+export default function Calendar({from,to,handleCalendar}) {
     const [date, setDate] = useState({
         justDate: null,
         dateTime: null
@@ -29,8 +29,8 @@ export default function Calendar({from,to}) {
                     <div className='flex gap-4 w-full'>
                         {times.map((time, i) => {
                             return (
-                                <div key={`time-${i}`} className='rounded-sm bg-gray-100 p-2 '>
-                                    <button type='button' onClick={() => setDate((prev) => ({ ...prev, dateTime: time }))} >
+                                <div key={`time-${i}`} className='rounded-sm bg-gray-100 p-2 ' onClick={handleCalendar(date)}>
+                                    <button type='button' onClick={() => {setDate((prev) => ({ ...prev, dateTime: time }))}} >
                                         {format(time, 'kk:mm')}
                                     </button>
                                 </div>

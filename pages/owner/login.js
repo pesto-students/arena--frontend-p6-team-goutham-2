@@ -79,6 +79,9 @@ const SignIn = () => {
           <button className='text-xl italic text-[#434342]' type='submit'>SignIn</button>
         </form>
       </main>
+      <footer className='flex flex-col items-center mt-4'>
+        <p className='text-[#434342]'>Don't have an account?<u onClick={()=>router.push("/owner/register")}>Create</u> </p>
+      </footer>
   </div>
   );
 };

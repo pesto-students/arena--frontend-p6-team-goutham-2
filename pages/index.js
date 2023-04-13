@@ -30,7 +30,7 @@ export default function Home() {
                 </h1>
               </div>
 
-              <div className="flex flex-row items-center justify-between w-1/2 ... " onClick={()=>router.push("/register")}>
+              <div className="flex flex-row items-center justify-between w-1/2 ... " onClick={()=>router.push("/login")}>
                 <button className="py-2  text-xl text-black text-[#434342] " >
                   Get Started
                 </button>

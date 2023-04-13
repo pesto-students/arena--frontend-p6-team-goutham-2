@@ -51,7 +51,6 @@ export default function Home() {
                             Payment details
                         </button>
 
-                        <h3 className="text-xl text-[#434342] ">Log Out<span></span></h3>
                     </div>
 
                     {/* <h3 onClick={() => router.push("/owner/AddCourt")}>Add court</h3> */}

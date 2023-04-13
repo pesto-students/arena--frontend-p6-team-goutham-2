@@ -32,7 +32,7 @@ const CourtList = () => {
                     {Courts?.map((item) => {
                         return (
                             <li key={item?.email} className="py-4 flow-root">
-                                <div className="flow-root ..." onClick={()=>router.push(`/court/${item.owner_id}`)}>
+                                <div className="flow-root ..." onClick={()=> router.push({ pathname: `/court/${item.owner_id}`, query: { user_id: userData?._id }})}>
                                     <img className="rounded-t-lg aspect-video ..." src="https://images.unsplash.com/photo-1491904768633-2b7e3e7fede5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3131&q=80" alt="" />
                                     <div className="ml-3">
                                         <div className='flex items-center justify-between	...'>
@@ -45,7 +45,7 @@ const CourtList = () => {
                                                 <p className="text-sm italic font-bold">{item?.facility}</p>
                                             </div>
                                             <div>
-                                               <button className=" w-max	rounded-3xl block w-full bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Choose</button>
+                                               <button className=" w-max rounded-3xl block w-full bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Choose</button>
                                             </div>
                                         </div>
                                         <p className="text-sm italic font-bold">{item?.location}</p>
@@ -57,6 +57,9 @@ const CourtList = () => {
                             </li>
                         )
                     })}
+                    {Courts?.length === 0 && (
+                         <center>  <h1>Opening soon!!</h1></center>                        
+                    )}
                 </ul>
 
             </div>

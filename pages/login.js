@@ -32,16 +32,17 @@ const SignIn = () => {
           withCredentials: true,
         }
       );
-      response.data.token && setSuccessMsg("Registered")
-    } catch (err) {
+      response.data.token && setSuccessMsg(response.data.user)
+   } catch (err) {
       console.log(err, "error");
     }
   };
   React.useEffect(() => {
-    if (successMsg === "Registered") {
-      router.push("/court/courtlist")
-    }
-  }, [successMsg]);
+
+      if (successMsg ) {
+        router.push(`/court/courtlist/${successMsg._id}`)
+      }
+    }, [successMsg]);
   return (
     <div className='w-full'>
       <Navbar />
@@ -71,12 +72,11 @@ const SignIn = () => {
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
             />
           </div>
-          <p className='ml-10'>Forgot Your Password ?</p>
           <button className='text-xl italic text-[#434342]' type='submit'>SignIn</button>
         </form>
       </main>
       <footer className='flex flex-col items-center mt-4'>
-        <p className='text-[#434342]'>Don't have an account?<u>Create</u> </p>
+        <p className='text-[#434342]'>Don't have an account?<u onClick={()=>router.push("/register")}>Create</u> </p>
       </footer>
     </div>
   );

@@ -68,7 +68,6 @@ export default function AddSlot() {
                     withCredentials: true,
                 }
             );
-            console.log(formValues,response,"res...........");
             response.data.id && setSuccessMsg("court updated")
         } catch (err) {
             console.log(err, "error");

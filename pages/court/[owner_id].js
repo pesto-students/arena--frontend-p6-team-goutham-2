@@ -1,158 +1,199 @@
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import axios from "../api/authApi";
-import { Navbar } from '@components';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import Calendar from '../../components/calendar';
+import { Navbar } from "@components";
+import { useEffect } from "react";
+import { useState } from "react";
+import Calendar from "../../components/calendar";
 
-const Post = () => {
-  const router = useRouter()
-  const { owner_id } = router.query
-  const [data,setData] = useState(null)
-  const apiKey = 'e7537d6804384d3f9149817d235e1084';
-  const apiURL = 'https://emailvalidation.abstractapi.com/v1/?api_key=' + apiKey
+const BookCourt = () => {
+  const router = useRouter();
+  const { owner_id } = router.query;
+  const [data, setData] = useState(null);
+  const [dateTime, setDateTime] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const apiKey = "e7537d6804384d3f9149817d235e1084";
+  const apiURL =
+    "https://emailvalidation.abstractapi.com/v1/?api_key=" + apiKey;
   const BOOKNOW_URL = `/court/booknow/${data?._id}`;
-    
+  const USER_URL = `${router.query.user_id}`;
+  const URL = "/rayzorpay";
+  useEffect(() => {
+    const getUsers = async () => {
+      if (router.query.user_id) {
+        const response = await axios.get(USER_URL);
+        setUserData(response);
+      }
+    };
+    getUsers();
+  }, [router.query.user_id]);
+  // useEffect(() => {
+  //     (async () => {
+  //         const email = "arenahelpline@gmail.com"
+  //         try {
+  //             const response = await fetch(apiURL + '&email=' + email);
+  //             const data = await response.json();
+  //         } catch (error) {
+  //             throw error;
+  //         }
+  //     })();
 
-    // useEffect(() => {
-    //     (async () => {
-    //         const email = "arenahelpline@gmail.com"
-    //         try {
-    //             const response = await fetch(apiURL + '&email=' + email);
-    //             const data = await response.json();
-    //         } catch (error) {
-    //             throw error;
-    //         }
-    //     })();
+  // }, [])
 
-    // }, [])
+  // const sendEmailValidationRequest = async (email) => {
+  //     try {
+  //         const response = await fetch(apiURL + '&email=' + email);
+  //         const data = await response.json();
+  //     } catch (error) {
+  //         throw error;
+  //     }
+  // }
 
+  const handleCalendar = (date) => {
+    setDateTime(date?.dateTime?.toLocaleString());
+  };
+  useEffect(() => {
+    // fetch data
+    const dataFetch = async () => {
+      const data = await axios.get(`/court/${owner_id}`);
+      data?.data && setData(data?.data.data[0]);
+    };
 
-    // const sendEmailValidationRequest = async (email) => {
-    //     try {
-    //         const response = await fetch(apiURL + '&email=' + email);
-    //         const data = await response.json();
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
-    const handleSubmit = async () => {
-      try {
-        delete data._id
-        const response = await axios.post(
-            BOOKNOW_URL,
-            JSON.stringify(data),
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                withCredentials: true,
-            }
-        );
-        console.log(response,"res.....");
-        // response.data.id && setSuccessMsg(response.data.id)
-    } catch (err) {
-        console.log(err, "error");
-    }
-    }
-const handleCalendar = () => {
-  console.log("calendar");
-}
-    useEffect(() => {
-        // fetch data
-        const dataFetch = async () => {
-            const data =
-                await axios.get(
-                    `/court/${owner_id}`
+    dataFetch();
+  }, [owner_id]);
 
-                );
-            data?.data && setData(data?.data.data[0])
-      };
+  const handlePayment = async () => {
+    try {
+      delete data._id;
+      data.date = dateTime;
+      const response = await axios.post(URL, JSON.stringify(data), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      if (response.data.data.id) {
+        var options = {
+          key: process.env.RAYZORPAY_KEY,
+          amount: response?.data?.data?.amount * 100,
+          currency: "INR",
+          name: "Arena",
+          description: "Test Transaction",
+          image: "https://example.com/your_logo",
+          order_id: response.data.data.id, 
+          handler: function (response) {
+            alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature);
+          },
+          notes: {
+            notes_key_1: "Tea, Earl Grey, Hot",
+            notes_key_2: "Tea, Earl Grey… decaf.",
+          },
+          prefill: {
+            name: "Arena badminton", //your customer's name
+            email: "arenahelpline@gmail.com",
+            contact: "9000090000",
+          },
+          notes: {
+            address: "Razorpay Corporate Office",
+          },
+          theme: {
+            color: "#3399cc",
+          },
+        };
+        var rzp1 = new window.Razorpay(options);
+        rzp1.open();
+      }
+    } catch (err) {}
+  };
 
-        dataFetch();
-    }, [owner_id]);
-    return (
-        <div className="w-full">
-        <Navbar />
-        <main></main>
-        <div>
-          <div className=" text-[#434342] italic pl-5 ">
-            <h1 className="text-xl font-light">
-              Draw Back, serve and hit it across the net.
-            </h1>
-            <p className="pl-5 text-sm italic font-bold">Thambaram</p>
-          </div>
-          <ul className="grid gap-4 grid-cols-2 px-10 ...">
-            <div className="flow-root ...">
-              <li className="py-4 flow-root">
-                <img
-                  className="rounded-t-lg aspect-video ..."
-                  src="https://images.unsplash.com/photo-1491904768633-2b7e3e7fede5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3131&q=80"
-                  alt=""
-                />
-              </li>
-            </div>
-            <li>
-              <div className="flex flex-col gap-10">
-                <div class="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
-                  <p>Timing</p>
-                  <p>Mon-Sun: 5am-2am</p>
-                </div>
-                <div className="flex italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-start flex-col">
-                  <p>Location</p>
-                  <p>
-                    { data?.address || "District Kanchupuram, Sivagami Nagar Ext Road, MunusamiNagar,Medavakam Chennai, TamilNadu 600100"}
-                  </p>
-                   <p> {data?.location}</p>
-                </div>
-              </div>
-            </li>
-  <Calendar from={data?.from || 9} to={data?.to ||19} handleCalendar={handleCalendar}/>           
-  
-            <li>
-              <div className="flex flex-col gap-10">
-                <div class="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
-                  <p>Sports Available. <b>{data?.sports}</b></p>
-                  
-                  <p>Facility: {data?.facility}</p>
-                 
-  
-                </div>
-              </div>
-            </li>
-            <li className="flex items-center justify-center">
-              <button
-                onClick={handleSubmit}
-                class="italic rounded-lg py-2.5 px-6 bg-green-500 text-white font-semibold shadow-md hover:bg-white-700 focus:outline-gray focus:ring-2 focus:ring-white-400 focus:ring-opacity-75"
-              >
-                Book Now
-              </button>
-            </li>
-            <li>
-              <div className="flex flex-col gap-10">
-                <div class="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
-                  <p>Price: ₹ {data?.price || "200"} per hour</p>
-              
-                </div>
-              </div>
-            </li>
-            <li></li>
-  
-            <li>
-              <div className="flex flex-col gap-10">
-                <div class="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
-                  <p>Related To Shasu Badminton Sports Medavakkam 
-                      Sports Clybs in Medavakkam, Badminton courts in Chennai,Badminton courts in Chennai,
-                  </p>
-  
-                </div>
-              </div>
-            </li>
-            <li></li>
-          </ul>
+  return (
+    <div className="w-full">
+      <Navbar />
+      <div>
+        <div className=" text-[#434342] italic pl-5 ">
+          <h1 className="text-xl font-light">
+            Draw Back, serve and hit it across the net.
+          </h1>
+          <p className="pl-5 text-sm italic font-bold">{data?.location}</p>
         </div>
+        <ul className="grid gap-4 grid-cols-2 px-10 ...">
+          <div className="flow-root ...">
+            <li className="py-4 flow-root">
+              <img
+                className="rounded-t-lg aspect-video ..."
+                src="https://images.unsplash.com/photo-1491904768633-2b7e3e7fede5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3131&q=80"
+                alt=""
+              />
+            </li>
+          </div>
+          <li>
+            <div className="flex flex-col gap-10">
+              <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
+                <p>Timing</p>
+                <p>
+                  Mon-Sun: {data?.from}:00 - {data?.to}:00
+                </p>
+              </div>
+              <div className="flex italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-start flex-col">
+                <p>Location</p>
+                <p>
+                  {data?.address ||
+                    "District Kanchupuram, Sivagami Nagar Ext Road, MunusamiNagar,Medavakam Chennai, TamilNadu 600100"}
+                </p>
+                <p> {data?.location}</p>
+              </div>
+            </div>
+          </li>
+          <Calendar
+            from={data?.from || 9}
+            to={data?.to || 19}
+            handleCalendar={handleCalendar}
+          />
+          <li>
+            <div className="flex flex-col gap-10">
+              <div class="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
+                <p>
+                  Sports Available. <b>{data?.sports}</b>
+                </p>
+                <p>Facility: {data?.facility}</p>
+              </div>
+            </div>
+          </li>
+          <li className="flex items-center justify-center">
+            <button
+              onClick={() => handlePayment()}
+              type="button"
+              // onClick={() => router.push({ pathname: `/court/Book`, query: { user_id: userData?.data.data._id, } })}
+              className="italic rounded-lg py-2.5 px-6 bg-green-500 text-white font-semibold shadow-md hover:bg-white-700 focus:outline-gray focus:ring-2 focus:ring-white-400 focus:ring-opacity-75"
+            >
+              Book Now
+            </button>
+          </li>
+          <li>
+            <div className="flex flex-col gap-10">
+              <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
+                <p>Price: ₹ {data?.price || "200"} per hour</p>
+              </div>
+            </div>
+          </li>
+          <li></li>
+          <li>
+            <div className="flex flex-col gap-10">
+              <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
+                <p>
+                  Related To Shasu Badminton Sports Medavakkam Sports Clybs in
+                  Medavakkam, Badminton courts in Chennai,Badminton courts in
+                  Chennai,
+                </p>
+              </div>
+            </div>
+          </li>
+          <li></li>
+        </ul>
       </div>
-    );
-}
+    </div>
+  );
+};
 
-export default Post
+export default BookCourt;

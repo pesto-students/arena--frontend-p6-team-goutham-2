@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { ROUTES } from '@constants';
 import { Navbar } from '@components';
 import { useState } from 'react';
+import { useEffect } from 'react';
 
 
 export default function BookNow() {

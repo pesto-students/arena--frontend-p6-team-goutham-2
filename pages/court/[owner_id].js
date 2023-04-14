@@ -102,7 +102,6 @@ const BookCourt = () => {
               },
               withCredentials: true,
             });
-            console.log(responses.data);
             responses.data.id && setPaymentDetails(responses.data.signature);
           },
           notes: {

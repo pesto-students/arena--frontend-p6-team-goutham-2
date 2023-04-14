@@ -10,7 +10,7 @@ const Register = () => {
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
   const [userId, setUserId] = useState(null)
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState();
   const REGISTER_URL = "/signup";
 
   const handleChange = (e) => {
@@ -21,8 +21,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
-    setIsSubmitting(true);
-
     try {
       const response = await axios.post(
         REGISTER_URL,
@@ -36,7 +34,7 @@ const Register = () => {
       );
       response.data.id && setUserId(response.data.id)
     } catch (err) {
-      console.log(err, "error");
+      setError(err.response.data.error);
     }
   };
   React.useEffect(() => {
@@ -55,6 +53,7 @@ const Register = () => {
         <form onSubmit={handleSubmit} className='flex flex-col items-center space-y-4 mt-8'>
           <div className=''>
             <input
+              required
               type='text'
               name='name'
               placeholder='Full name'
@@ -66,6 +65,7 @@ const Register = () => {
 
           <div className=''>
             <input
+              required
               type='phone'
               name='phone'
               id='phone'
@@ -77,6 +77,7 @@ const Register = () => {
 
           <div className=''>
             <input
+              required
               type='text'
               name='email'
               id='email'
@@ -87,6 +88,7 @@ const Register = () => {
           </div>
           <div className=''>
             <input
+              required
               type='password'
               name='password'
               placeholder='Password'
@@ -95,6 +97,20 @@ const Register = () => {
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
             />
           </div>
+          {error && (
+            <div
+              type="submit"
+              class="group relative flex w-full justify-center rounded-md bg-red-400 px-3 py-2 text-sm font-semibold text-white  "
+            >
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 mt-1">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                />
+              </span>
+              {error}
+            </div>)}
           <button className='text-xl italic text-[#434342]' type='submit'>Register</button>
         </form>
       </main>

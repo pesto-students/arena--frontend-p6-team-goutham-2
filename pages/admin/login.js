@@ -9,7 +9,7 @@ const SignIn = () => {
   const intialValues = { email: "", password: "" };
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loginError, setLoginError] = useState();
   const [successMsg, setSuccessMsg] = useState(null)
   const REGISTER_URL = "/admin/signin"
   const handleChange = (e) => {
@@ -19,7 +19,6 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormErrors(validate(formValues));
-    setIsSubmitting(true);
     try {
       const response = await axios.post(
         REGISTER_URL,
@@ -33,12 +32,12 @@ const SignIn = () => {
       );
       response.data.token && setSuccessMsg("Login")
     } catch (err) {
-      console.log(err, "error");
+      setLoginError(err.response.data.error);
     }
   };
   React.useEffect(() => {
     if (successMsg === "Login") {
-      router.push("/")
+      // router.push("/Home")
     }
   }, [successMsg]);
   return (
@@ -70,8 +69,27 @@ const SignIn = () => {
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
             />
           </div>
-          <p className='ml-10'>Forgot Your Password ?</p>
-          <button className='text-xl italic text-[#434342]' type='submit'>SignIn</button>
+          {loginError && (
+            <div
+              type="submit"
+              class="group relative flex w-full justify-center rounded-md bg-red-400 px-3 py-2 text-sm font-semibold text-white  "
+            >
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 mt-1">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                />
+              </span>
+              {loginError}
+            </div>
+          )}
+          <button className='text-xl italic text-[#434342]' type='submit'
+          >SignIn</button>
+          <p className="text-[#434342]">
+          Don't have an account?
+          <u onClick={() => router.push("/admin/register")}>Create</u>{" "}
+        </p>
         </form>
       </main>
     </div>

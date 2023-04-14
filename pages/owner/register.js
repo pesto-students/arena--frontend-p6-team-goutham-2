@@ -9,6 +9,7 @@ const Register = () => {
   const router = useRouter();
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
+  const [error,setError] = useState()
   const [successMsg, setSuccessMsg] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const REGISTER_URL = "/owner/signup";
@@ -40,7 +41,7 @@ const Register = () => {
       );
       response.data.id && setSuccessMsg("Registered")
     } catch (err) {
-      console.log(err, "error");
+      setError(err.response.data.error);
     }
   };
 
@@ -59,6 +60,7 @@ const Register = () => {
               name='name'
               placeholder='Full name'
               id='name'
+              required
               onChange={handleChange}
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
             />
@@ -69,6 +71,7 @@ const Register = () => {
               type='phone'
               name='phone'
               id='phone'
+              required
               onChange={handleChange}
               placeholder='Mobile No.'
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
@@ -80,6 +83,7 @@ const Register = () => {
               type='text'
               name='email'
               id='email'
+              required
               onChange={handleChange}
               placeholder='Email Address'
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
@@ -91,10 +95,25 @@ const Register = () => {
               name='password'
               placeholder='Password'
               id='password'
+              required
               onChange={handleChange}
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
             />
           </div>
+          {error && (
+          <div
+              type="submit"
+              class="group relative flex w-full justify-center rounded-md bg-red-400 px-3 py-2 text-sm font-semibold text-white  "
+            >
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 mt-1">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                />
+              </span>
+              {error}
+            </div>)}
           <button className='text-xl italic text-[#434342]' type='submit'>Register</button>
         </form>
       </main>

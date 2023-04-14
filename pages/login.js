@@ -11,8 +11,9 @@ const SignIn = () => {
   const [formValues, setFormValues] = useState(intialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMsg, setSuccessMsg] = useState(null)
-  const REGISTER_URL = "/signin"
+  const [successMsg, setSuccessMsg] = useState(null);
+  const [error, setError] = useState(null)
+  const REGISTER_URL = "/signin";
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -33,16 +34,17 @@ const SignIn = () => {
         }
       );
       response.data.token && setSuccessMsg(response.data.user)
-   } catch (err) {
-      console.log(err, "error");
+
+    } catch (err) {
+      setError(err.response.data.error)
     }
   };
   React.useEffect(() => {
 
-      if (successMsg ) {
-        router.push(`/court/courtlist/${successMsg._id}`)
-      }
-    }, [successMsg]);
+    if (successMsg) {
+      router.push(`/court/courtlist/${successMsg._id}`)
+    }
+  }, [successMsg]);
   return (
     <div className='w-full'>
       <Navbar />
@@ -72,11 +74,25 @@ const SignIn = () => {
               className='bg-[#d9d9d9] rounded-xl px-4 py-1.5 placeholder:text-[#434242] placeholder:opacity-90 placeholder:italic'
             />
           </div>
+          {error && (
+            <div
+              type="submit"
+              class="group relative flex w-full justify-center rounded-md bg-red-400 px-3 py-2 text-sm font-semibold text-white  "
+            >
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 mt-1">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                />
+              </span>
+              {error}
+            </div>)}
           <button className='text-xl italic text-[#434342]' type='submit'>SignIn</button>
         </form>
       </main>
       <footer className='flex flex-col items-center mt-4'>
-        <p className='text-[#434342]'>Don't have an account?<u onClick={()=>router.push("/register")}>Create</u> </p>
+        <p className='text-[#434342]'>Don't have an account?<u onClick={() => router.push("/register")}>Create</u> </p>
       </footer>
     </div>
   );

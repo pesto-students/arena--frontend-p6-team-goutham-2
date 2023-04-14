@@ -26,28 +26,6 @@ const Post = () => {
         getUsers();
     }, [router.query.user_id])
 
-
-
-    const handleSubmit = async () => {
-        try {
-            delete data._id
-            data.date = dateTime
-            const response = await axios.post(
-                BOOKNOW_URL,
-                JSON.stringify(data),
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    withCredentials: true,
-                }
-            );
-            // response.data.id && setSuccessMsg(response.data.id)
-        } catch (err) {
-            console.log(err, "error");
-        }
-    }
-
     useEffect(() => {
         // fetch data
         const dataFetch = async () => {

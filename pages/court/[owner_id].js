@@ -11,7 +11,7 @@ const BookCourt = () => {
   const [data, setData] = useState(null);
   const [dateTime, setDateTime] = useState(null);
   const [userData, setUserData] = useState(null);
-  const[paymentDetails,setPaymentDetails]=useState(null)
+  const [paymentDetails, setPaymentDetails] = useState(null)
   const apiKey = "e7537d6804384d3f9149817d235e1084";
   const apiURL =
     "https://emailvalidation.abstractapi.com/v1/?api_key=" + apiKey;
@@ -26,32 +26,12 @@ const BookCourt = () => {
     };
     getUsers();
   }, [router.query.user_id]);
-  useEffect(()=>{
-    if(paymentDetails != null){
+  useEffect(() => {
+    if (paymentDetails != null) {
       router.push("/user/ConfirmationPage")
     }
-  },[paymentDetails]);
-  // useEffect(() => {
-  //     (async () => {
-  //         const email = "arenahelpline@gmail.com"
-  //         try {
-  //             const response = await fetch(apiURL + '&email=' + email);
-  //             const data = await response.json();
-  //         } catch (error) {
-  //             throw error;
-  //         }
-  //     })();
-
-  // }, [])
-
-  // const sendEmailValidationRequest = async (email) => {
-  //     try {
-  //         const response = await fetch(apiURL + '&email=' + email);
-  //         const data = await response.json();
-  //     } catch (error) {
-  //         throw error;
-  //     }
-  // }
+  }, [paymentDetails]);
+  
   const handleCalendar = (date) => {
     setDateTime(date?.dateTime?.toLocaleString());
   };
@@ -83,18 +63,18 @@ const BookCourt = () => {
           name: "Arena",
           description: "Test Transaction",
           image: "https://example.com/your_logo",
-          order_id: response.data.data.id, 
-          handler: async function  (response) {
-            const userPayment= {
+          order_id: response.data.data.id,
+          handler: async function (response) {
+            const userPayment = {
               name: userData.name,
-              email:userData.email,
+              email: userData.email,
               razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id:response.razorpay_order_id,
-              razorpay_signature:response.razorpay_signature,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
               courtName: data.courtName,
-              amount:data.price,              
-              location:data.location,
-              date:data.date,
+              amount: data.price,
+              location: data.location,
+              date: data.date,
             }
             const responses = await axios.post(`/payment/paymentdata`, JSON.stringify(userPayment), {
               headers: {
@@ -123,7 +103,9 @@ const BookCourt = () => {
         var rzp1 = new window.Razorpay(options);
         rzp1.open();
       }
-    } catch (err) {}
+    } catch (err) { 
+      console.log(err);
+    }
   };
 
   return (
@@ -138,9 +120,9 @@ const BookCourt = () => {
         </div>
         <ul className="grid gap-4 grid-cols-2 px-10 ...">
           <div className="flow-root ...">
-            <li className="py-4 flow-root">
+            <li className="py-4 h-80 flow-root">
               <img
-                className="rounded-t-lg aspect-video ..."
+                className="rounded-t-lg  aspect-video ..."
                 src="https://images.unsplash.com/photo-1491904768633-2b7e3e7fede5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3131&q=80"
                 alt=""
               />
@@ -162,15 +144,6 @@ const BookCourt = () => {
                 </p>
                 <p> {data?.location}</p>
               </div>
-            </div>
-          </li>
-          <Calendar
-            from={data?.from || 9}
-            to={data?.to || 19}
-            handleCalendar={handleCalendar}
-          />
-          <li>
-            <div className="flex flex-col gap-10">
               <div class="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
                 <p>
                   Sports Available. <b>{data?.sports}</b>
@@ -179,37 +152,42 @@ const BookCourt = () => {
               </div>
             </div>
           </li>
-          <li className="flex items-center justify-center">
-            <button
-              onClick={() => handlePayment()}
-              type="button"
-              // onClick={() => router.push({ pathname: `/court/Book`, query: { user_id: userData?.data.data._id, } })}
-              className="italic rounded-lg py-2.5 px-6 bg-green-500 text-white font-semibold shadow-md hover:bg-white-700 focus:outline-gray focus:ring-2 focus:ring-white-400 focus:ring-opacity-75"
-            >
-              Book Now
-            </button>
-          </li>
-          <li>
-            <div className="flex flex-col gap-10">
-              <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
-                <p>Price: ₹ {data?.price || "200"} per hour</p>
-              </div>
-            </div>
-          </li>
-          <li></li>
-          <li>
-            <div className="flex flex-col gap-10">
-              <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
-                <p>
-                  Related To Shasu Badminton Sports Medavakkam Sports Clybs in
-                  Medavakkam, Badminton courts in Chennai,Badminton courts in
-                  Chennai,
-                </p>
-              </div>
-            </div>
-          </li>
-          <li></li>
         </ul>
+        <div className="ml-16">
+        <Calendar
+          from={data?.from || 9}
+          to={data?.to || 19}
+          handleCalendar={handleCalendar}
+        /></div>
+         <li>
+          <div className="flex flex-col gap-10">
+            <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
+              <p>Price: ₹ {data?.price || "200"} per hour</p>
+            </div>
+          </div>
+        </li>
+       
+        <li className="flex items-center justify-center py-12">
+          <button
+            onClick={() => handlePayment()}
+            type="button"
+            // onClick={() => router.push({ pathname: `/court/Book`, query: { user_id: userData?.data.data._id, } })}
+            className="italic rounded-lg py-2.5 px-6 bg-green-500 text-white font-semibold shadow-md hover:bg-white-700 focus:outline-gray focus:ring-2 focus:ring-white-400 focus:ring-opacity-75"
+          >
+            Book Now
+          </button>
+        </li>
+        <li>
+          <div className="flex flex-col gap-10">
+            <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
+              <p>
+                Related To Shasu Badminton Sports Medavakkam Sports Clybs in
+                Medavakkam, Badminton courts in Chennai, Badminton courts in
+                Chennai.
+              </p>
+            </div>
+          </div>
+        </li>
       </div>
     </div>
   );

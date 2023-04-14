@@ -24,7 +24,7 @@ export default function Calendar({from,to,handleCalendar}) {
     return (
         <>
 
-            <div className='flex h-screen flex-col items-center justify-center'>
+            <div className='flex mb-2 flex-col items-center justify-center'>
                 {date.justDate ?
                     <div className='flex gap-4 w-full'>
                         {times.map((time, i) => {

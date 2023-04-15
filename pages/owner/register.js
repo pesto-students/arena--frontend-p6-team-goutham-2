@@ -14,8 +14,8 @@ const Register = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const REGISTER_URL = "/owner/signup";
   React.useEffect(() => {
-    if (successMsg === "Registered") {
-      router.push("/")
+    if (successMsg) {
+      router.push(`/owner/Home/${successMsg}`);
     }
   }, [successMsg]);
   const handleChange = (e) => {
@@ -39,9 +39,11 @@ const Register = () => {
           withCredentials: true,
         }
       );
-      response.data.id && setSuccessMsg("Registered")
+      console.log(response.data);
+      response.data.id && setSuccessMsg(response.data.id)
     } catch (err) {
-      setError(err.response.data.error);
+      console.log(err);
+      setError(err?.response?.data?.error);
     }
   };
 

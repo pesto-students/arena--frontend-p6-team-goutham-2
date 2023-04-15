@@ -122,22 +122,21 @@ const BookCourt = () => {
           <div className="flow-root ...">
             <li className="py-4 h-80 flow-root">
               <img
-                className="rounded-t-lg  aspect-video ..."
-                src="https://images.unsplash.com/photo-1491904768633-2b7e3e7fede5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3131&q=80"
-                alt=""
+                className="aspect-video ..."
+                src="/court.png" alt="badminton"
               />
             </li>
           </div>
           <li>
             <div className="flex flex-col gap-10">
-              <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
-                <p>Timing</p>
+              <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black  shadow-md flex items-center flex-col">
+                <p className="font-semibold">Timing</p>
                 <p>
-                  Mon-Sun: {data?.from}:00 - {data?.to}:00
+                  Mon-Sun: {data?.from || 9}:00 - {data?.to || 16}:00
                 </p>
               </div>
-              <div className="flex italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-start flex-col">
-                <p>Location</p>
+              <div className="flex italic rounded-lg py-2.5 px-4 bg-white-500 text-black  shadow-md flex items-start flex-col">
+                <p className="font-semibold">Location</p>
                 <p>
                   {data?.address ||
                     "District Kanchupuram, Sivagami Nagar Ext Road, MunusamiNagar,Medavakam Chennai, TamilNadu 600100"}
@@ -171,7 +170,6 @@ const BookCourt = () => {
           <button
             onClick={() => handlePayment()}
             type="button"
-            // onClick={() => router.push({ pathname: `/court/Book`, query: { user_id: userData?.data.data._id, } })}
             className="italic rounded-lg py-2.5 px-6 bg-green-500 text-white font-semibold shadow-md hover:bg-white-700 focus:outline-gray focus:ring-2 focus:ring-white-400 focus:ring-opacity-75"
           >
             Book Now

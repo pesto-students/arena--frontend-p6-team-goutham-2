@@ -13,8 +13,8 @@ const Register = () => {
   const [loginError, setLoginError] = useState(false);
   const REGISTER_URL = "/admin/signup";
   React.useEffect(() => {
-    if (successMsg === "Registered") {
-      router.push("/")
+    if (successMsg) {
+      router.push(`/admin/Home/${successMsg}`)
     }
   }, [successMsg]);
   const handleChange = (e) => {
@@ -36,7 +36,7 @@ const Register = () => {
           withCredentials: true,
         }
       );
-      response.data.id && setSuccessMsg("Registered")
+      response.data.id && setSuccessMsg(response.data.id  )
     } catch (err) {
       setLoginError(err.response.data.error);
     }

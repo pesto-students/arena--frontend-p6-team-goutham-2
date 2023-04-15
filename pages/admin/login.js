@@ -30,14 +30,14 @@ const SignIn = () => {
           withCredentials: true,
         }
       );
-      response.data.token && setSuccessMsg("Login")
+      response.data.token && setSuccessMsg(response.data.user._id)
     } catch (err) {
       setLoginError(err.response.data.error);
     }
   };
   React.useEffect(() => {
-    if (successMsg === "Login") {
-      // router.push("/Home")
+    if (successMsg ) {
+      router.push(`/admin/Home/${successMsg}`)
     }
   }, [successMsg]);
   return (

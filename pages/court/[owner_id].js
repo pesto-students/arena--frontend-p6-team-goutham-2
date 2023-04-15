@@ -11,6 +11,7 @@ const BookCourt = () => {
   const [data, setData] = useState(null);
   const [dateTime, setDateTime] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [dateError, setDateError] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState(null)
   const apiKey = "e7537d6804384d3f9149817d235e1084";
   const apiURL =
@@ -26,8 +27,8 @@ const BookCourt = () => {
     };
     getUsers();
   }, [router.query.user_id]);
- 
-  
+
+
   const handleCalendar = (date) => {
     setDateTime(date?.dateTime?.toLocaleString());
   };
@@ -44,63 +45,65 @@ const BookCourt = () => {
   const handlePayment = async () => {
     try {
       delete data._id;
-      data.date = dateTime;
-      const response = await axios.post(URL, JSON.stringify(data), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
-      if (response.data.data.id) {
-        var options = {
-          key: process.env.RAYZORPAY_KEY,
-          amount: response?.data?.data?.amount * 100,
-          currency: "INR",
-          name: "Arena",
-          description: "Test Transaction",
-          image: "https://example.com/your_logo",
-          order_id: response.data.data.id,
-          handler: async function (response) {
-            const userPayment = {
-              name: userData.name,
-              email: userData.email,
-              razorpay_payment_id: response?.razorpay_payment_id,
-              razorpay_order_id: response?.razorpay_order_id,
-              razorpay_signature: response?.razorpay_signature,
-              courtName: data.courtName,
-              amount: data.price,
-              location: data.location,
-              date: data.date,
-            }
-            const responses = await axios.post(`/payment/paymentdata`, JSON.stringify(userPayment), {
-              headers: {
-                "Content-Type": "application/json",
-              },
-              withCredentials: true,
-            });
-            responses?.data?.payment_id && router.push("/user/ConfirmationPage")
+      dateTime ? data.date = dateTime : setDateError(true);
+      if (dateError) {
+        const response = await axios.post(URL, JSON.stringify(data), {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+        if (response.data.data.id) {
+          var options = {
+            key: process.env.RAYZORPAY_KEY,
+            amount: response?.data?.data?.amount * 100,
+            currency: "INR",
+            name: "Arena",
+            description: "Test Transaction",
+            image: "https://example.com/your_logo",
+            order_id: response.data.data.id,
+            handler: async function (response) {
+              const userPayment = {
+                name: userData.name,
+                email: userData.email,
+                razorpay_payment_id: response?.razorpay_payment_id,
+                razorpay_order_id: response?.razorpay_order_id,
+                razorpay_signature: response?.razorpay_signature,
+                courtName: data.courtName,
+                amount: data.price,
+                location: data.location,
+                date: data.date,
+              }
+              const responses = await axios.post(`/payment/paymentdata`, JSON.stringify(userPayment), {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                withCredentials: true,
+              });
+              responses?.data?.payment_id && router.push("/user/ConfirmationPage")
 
-          },
-          notes: {
-            notes_key_1: "Rayzor pay payment",
-            notes_key_2: "Tea, Earl Grey… decaf.",
-          },
-          prefill: {
-            name: "Arena badminton", //your customer's name
-            email: "arenahelpline@gmail.com",
-            contact: "9000090000",
-          },
-          notes: {
-            address: "Razorpay Corporate Office",
-          },
-          theme: {
-            color: "#3399cc",
-          },
-        };
-        var rzp1 = new window.Razorpay(options);
-        rzp1.open();
+            },
+            notes: {
+              notes_key_1: "Rayzor pay payment",
+              notes_key_2: "Tea, Earl Grey… decaf.",
+            },
+            prefill: {
+              name: "Arena badminton", //your customer's name
+              email: "arenahelpline@gmail.com",
+              contact: "9000090000",
+            },
+            notes: {
+              address: "Razorpay Corporate Office",
+            },
+            theme: {
+              color: "#3399cc",
+            },
+          };
+          var rzp1 = new window.Razorpay(options);
+          rzp1.open();
+        }
       }
-    } catch (err) { 
+    } catch (err) {
       console.log(err);
     }
   };
@@ -150,19 +153,26 @@ const BookCourt = () => {
           </li>
         </ul>
         <div className="ml-16">
-        <Calendar
-          from={data?.from || 9}
-          to={data?.to || 19}
-          handleCalendar={handleCalendar}
-        /></div>
-         <li>
+          <Calendar
+            from={data?.from || 9}
+            to={data?.to || 19}
+            handleCalendar={handleCalendar}
+          /></div>
+        {dateError && <><div class="mx-3 my-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong class="font-bold">Slot! </strong>
+          <span class="block sm:inline">Choose as your wish</span>
+          <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+            <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" /></svg>
+          </span>
+        </div></>}
+        <li>
           <div className="flex flex-col gap-10">
             <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">
               <p>Price: ₹ {data?.price || "200"} per hour</p>
             </div>
           </div>
         </li>
-       
+
         <li className="flex items-center justify-center py-12">
           <button
             onClick={() => handlePayment()}

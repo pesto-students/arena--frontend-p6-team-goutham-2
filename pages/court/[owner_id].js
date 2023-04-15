@@ -11,7 +11,6 @@ const BookCourt = () => {
   const [data, setData] = useState(null);
   const [dateTime, setDateTime] = useState(null);
   const [userData, setUserData] = useState(null);
-  const [dateError, setDateError] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState(null)
   const apiKey = "e7537d6804384d3f9149817d235e1084";
   const apiURL =
@@ -45,8 +44,7 @@ const BookCourt = () => {
   const handlePayment = async () => {
     try {
       delete data._id;
-      dateTime ? data.date = dateTime : setDateError(true);
-      if (dateError) {
+       data.date = dateTime 
         const response = await axios.post(URL, JSON.stringify(data), {
           headers: {
             "Content-Type": "application/json",
@@ -102,7 +100,7 @@ const BookCourt = () => {
           var rzp1 = new window.Razorpay(options);
           rzp1.open();
         }
-      }
+      
     } catch (err) {
       console.log(err);
     }
@@ -158,13 +156,7 @@ const BookCourt = () => {
             to={data?.to || 19}
             handleCalendar={handleCalendar}
           /></div>
-        {dateError && <><div class="mx-3 my-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-          <strong class="font-bold">Slot! </strong>
-          <span class="block sm:inline">Choose as your wish</span>
-          <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-            <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" /></svg>
-          </span>
-        </div></>}
+     
         <li>
           <div className="flex flex-col gap-10">
             <div className="italic rounded-lg py-2.5 px-4 bg-white-500 text-black font-semibold shadow-md flex items-center flex-col">

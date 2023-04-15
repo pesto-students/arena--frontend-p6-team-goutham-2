@@ -30,9 +30,9 @@ const SignIn = () => {
           withCredentials: true,
         }
       );
-      response.data.token && setSuccessMsg(response.data.user._id)
+      response?.data?.token && setSuccessMsg(response?.data?.user._id)
     } catch (err) {
-      setLoginError(err.response.data.error);
+      setLoginError(err?.response?.data?.error);
     }
   };
   React.useEffect(() => {

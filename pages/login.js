@@ -33,10 +33,10 @@ const SignIn = () => {
           withCredentials: true,
         }
       );
-      response.data.token && setSuccessMsg(response.data.user)
+      response?.data?.token && setSuccessMsg(response?.data?.user)
 
     } catch (err) {
-      setError(err.response.data.error)
+      setError(err?.response?.data?.error)
     }
   };
   React.useEffect(() => {

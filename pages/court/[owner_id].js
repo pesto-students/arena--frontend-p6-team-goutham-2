@@ -26,11 +26,7 @@ const BookCourt = () => {
     };
     getUsers();
   }, [router.query.user_id]);
-  useEffect(() => {
-    if (paymentDetails != null) {
-      router.push("/user/ConfirmationPage")
-    }
-  }, [paymentDetails]);
+ 
   
   const handleCalendar = (date) => {
     setDateTime(date?.dateTime?.toLocaleString());
@@ -68,9 +64,9 @@ const BookCourt = () => {
             const userPayment = {
               name: userData.name,
               email: userData.email,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
+              razorpay_payment_id: response?.razorpay_payment_id,
+              razorpay_order_id: response?.razorpay_order_id,
+              razorpay_signature: response?.razorpay_signature,
               courtName: data.courtName,
               amount: data.price,
               location: data.location,
@@ -82,7 +78,8 @@ const BookCourt = () => {
               },
               withCredentials: true,
             });
-            responses.data.id && setPaymentDetails(responses.data.signature);
+            responses?.data?.payment_id && router.push("/user/ConfirmationPage")
+
           },
           notes: {
             notes_key_1: "Rayzor pay payment",

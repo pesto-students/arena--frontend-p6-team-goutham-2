@@ -40,7 +40,7 @@ const Register = () => {
         }
       );
       console.log(response.data);
-      response.data.id && setSuccessMsg(response.data.id)
+      response?.data?.id && setSuccessMsg(response?.data.id)
     } catch (err) {
       console.log(err);
       setError(err?.response?.data?.error);

@@ -32,9 +32,9 @@ const Register = () => {
           withCredentials: true,
         }
       );
-      response.data.id && setUserId(response.data.id)
+      response?.data?.id && setUserId(response.data.id)
     } catch (err) {
-      setError(err.response.data.error);
+      setError(err?.response?.data?.error);
     }
   };
   React.useEffect(() => {
